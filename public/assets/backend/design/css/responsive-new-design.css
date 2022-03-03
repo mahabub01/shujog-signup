@@ -1,0 +1,16 @@
+
+@media screen and (max-width: 1300px) {
+
+    .content_section{
+        padding: 30px 30px !important;
+    }
+
+    .card-signup {
+        width: 60%;
+    }
+
+    .full-height{
+        min-height: 74vh !important;  
+    }
+
+}

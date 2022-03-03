@@ -1,0 +1,5 @@
+{
+    "Core": true,
+    "Agent": true,
+    "Controller": true
+}
