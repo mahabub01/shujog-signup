@@ -51,6 +51,11 @@ class ConRejectAllStakeholderExport implements FromView
             $stakeholders_query->where(['signup_reference_id'=>$this->request->reference_id]);
         }
 
+        if($this->request->login_status != ""){
+            $loging_status = $this->request->login_status == "Activated" ? 1:0;
+            $stakeholders_query->where(['is_active'=>$loging_status]);
+        }
+
 
         if($this->request->status != ""){
             $stakeholders_query->whereHas('stakeholder',function($query){

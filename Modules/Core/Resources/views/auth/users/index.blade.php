@@ -32,7 +32,7 @@
         <a href="{{ asset('excel-template/freelancher_signle.xlsx') }}">Download Excel template</a>
     </div>
 
-    
+
 
     @endslot
 
@@ -127,9 +127,9 @@
                       <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{{route('core.users.create')}}"><i class="fas fa-plus"></i> New</a>
                       </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#ImportModal"><i class="fas fa-cloud-upload-alt"></i> Import</a>
-                      </li>
+{{--                      <li class="nav-item">--}}
+{{--                        <a class="nav-link" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#ImportModal"><i class="fas fa-cloud-upload-alt"></i> Import</a>--}}
+{{--                      </li>--}}
                       <li class="nav-item">
                         <a class="nav-link" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#BulkImportModal"><i class="fas fa-cloud-upload-alt"></i> Bulk User Import</a>
                       </li>

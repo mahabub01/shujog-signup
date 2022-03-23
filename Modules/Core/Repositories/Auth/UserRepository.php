@@ -88,6 +88,7 @@ class UserRepository implements UserInterface
             $obj->mobile  = $request->mobile;
             $obj->is_active = 1;
             $obj->password = bcrypt($request->password);
+            $obj->signup_media = "2";
             $obj->save();
 
 

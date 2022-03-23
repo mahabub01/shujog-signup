@@ -107,6 +107,7 @@ class StakeholderController extends Controller
             'filter_upazila'=>null,
             'references'=>$references,
             'reference_id'=>null,
+            'login_status'=> null
         ]);
     }
 
@@ -157,7 +158,7 @@ class StakeholderController extends Controller
             }
 
             if($request->start_date != "" && $request->end_date != ""){
-                $stakeholders_query->whereBetween('created_at',[$request->start_date.'00.00.00',$request->end_date.'23.59.59']);
+                $stakeholders_query->whereBetween('created_at',[$request->start_date.' 00.00.00',$request->end_date.' 23.59.59']);
                 $filter_by .= "Date, ";
             }
 
@@ -185,7 +186,11 @@ class StakeholderController extends Controller
                 $filter_by .= "Reference, ";
             }
 
-
+            if($request->login_status != ""){
+                $loging_status = $request->login_status == "Activated" ? 1:0;
+                $stakeholders_query->where(['is_active'=>$loging_status]);
+                $filter_by .= "Activation Status, ";
+            }
 
 
             $data =  $stakeholders_query->orderBy(Stakeholder::select('consultant_status')->whereColumn('agent_stakeholders.user_id','sujog_users.id'))
@@ -212,7 +217,7 @@ class StakeholderController extends Controller
                 });
             }
 
-            
+
             if($request->search != ""){
                 $stakeholders_query->where('name','like','%'.$request->search.'%')
                 ->orWhere(['mobile'=>$request->search]);
@@ -220,7 +225,7 @@ class StakeholderController extends Controller
             }
 
             if($request->start_date != "" && $request->end_date != ""){
-                $stakeholders_query->whereBetween('created_at',[$request->start_date.'00.00.00',$request->end_date.'23.59.59']);
+                $stakeholders_query->whereBetween('created_at',[$request->start_date.' 00.00.00',$request->end_date.' 23.59.59']);
                 $filter_by .= "Date, ";
             }
 
@@ -248,7 +253,11 @@ class StakeholderController extends Controller
                 $filter_by .= "Reference, ";
             }
 
-
+            if($request->login_status != ""){
+                $loging_status = $request->login_status == "Activated" ? 1:0;
+                $stakeholders_query->where(['is_active'=>$loging_status]);
+                $filter_by .= "Activation Status, ";
+            }
 
 
             $data =  $stakeholders_query->orderBy(Stakeholder::select('consultant_status')->whereColumn('agent_stakeholders.user_id','sujog_users.id'))->paginate(100);
@@ -280,6 +289,7 @@ class StakeholderController extends Controller
             'filter_upazila'=>$filter_upazila,
             'references'=>$references,
             'reference_id'=>$request->reference_id,
+            'login_status'=> $request->login_status
         ]);
     }
 
@@ -729,7 +739,29 @@ class StakeholderController extends Controller
 
 
 
-
+    //Change Status here
+    public function changeStatus($module,$status,$user_id)
+    {
+        if($status == 1){
+            try{
+                User::where(['id'=>$user_id])->update(['is_active'=>0]);
+                Session::flash("success","Your stakeholder is Deactivated");
+                return redirect()->back();
+            }catch (Exception $ex){
+                Session::flash('error',$ex->getMessage());
+                return redirect()->back();
+            }
+        }else{
+            try{
+                User::where(['id'=>$user_id])->update(['is_active'=>1]);
+                Session::flash("success","Your stakeholder is Activated");
+                return redirect()->back();
+            }catch (Exception $ex){
+                Session::flash('error',$ex->getMessage());
+                return redirect()->back();
+            }
+        }
+    }
 
 
     public function commentView($module,$user_id)

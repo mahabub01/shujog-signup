@@ -45,10 +45,11 @@ Route::post('load-district-by-division',[\Modules\Agent\Http\Controllers\UserCon
 
 
 
-
-
-
-
+ Route::get('{module}/stakeholder/incomplete-signup',[\Modules\Agent\Http\Controllers\Stakeholder\UnCompleteSignupController::class,'incompleteSignup'])->name('agent.incomplete-signup');
+ Route::get('{module}/stakeholder/incomplete-signup/filter',[\Modules\Agent\Http\Controllers\Stakeholder\UnCompleteSignupController::class,'filter'])->name('agent.incomplete-signup.filter');
+ Route::get('{module}/stakeholder/incomplete-signup/details/{id}',[\Modules\Agent\Http\Controllers\Stakeholder\UnCompleteSignupController::class,'details'])->name('agent.incomplete-signup.details');
+ Route::get('{module}/stakeholder/incomplete-signup/edit/{id}',[\Modules\Agent\Http\Controllers\Stakeholder\UnCompleteSignupController::class,'edit'])->name('agent.incomplete-signup.edit');
+ Route::put('{module}/stakeholder/incomplete-signup/update/{id}',[\Modules\Agent\Http\Controllers\Stakeholder\UnCompleteSignupController::class,'update'])->name('agent.incomplete-signup.update');
 
 
 
@@ -72,6 +73,8 @@ Route::group(['middleware' => ['prevent-back-history','core_permission']],functi
     Route::get('{modules}/stakeholders-filter',[\Modules\Agent\Http\Controllers\StakeholderController::class,'filter'])->name('agent.stakeholders.filter');
     Route::get('{modules}/stakeholders-all-export',[\Modules\Agent\Http\Controllers\StakeholderController::class,'allExport']);
     Route::post('{module}/stakeholders-single-export',[\Modules\Agent\Http\Controllers\StakeholderController::class,'selectable'])->name('agent.stackholder.export');
+    //Activation new added
+    Route::get('{module}/stakeholders-status/{status}/{id}',[\Modules\Agent\Http\Controllers\StakeholderController::class,'changeStatus']);
 
     Route::get('{modules}/stakeholders/consultant-comments/{id}',[\Modules\Agent\Http\Controllers\StakeholderController::class,'commentView']);
     Route::post('{modules}/stakeholders/consultant-comments/{id}',[\Modules\Agent\Http\Controllers\StakeholderController::class,'consultantCommentSubmit'])->name('agent.stackholders.consul_comment');

@@ -130,7 +130,7 @@ class RejectStakeholderController extends Controller
             }
 
             if($request->start_date != "" && $request->end_date != ""){
-                $stakeholders_query->whereBetween('created_at',[$request->start_date.'00.00.00',$request->end_date.'23.59.59']);
+                $stakeholders_query->whereBetween('created_at',[$request->start_date.' 00.00.00',$request->end_date.' 23.59.59']);
                 $filter_by .= "Date, ";
             }
 
@@ -185,7 +185,7 @@ class RejectStakeholderController extends Controller
             }
 
             if($request->start_date != "" && $request->end_date != ""){
-                $stakeholders_query->whereBetween('created_at',[$request->start_date.'00.00.00',$request->end_date.'23.59.59']);
+                $stakeholders_query->whereBetween('created_at',[$request->start_date.' 00.00.00',$request->end_date.' 23.59.59']);
                 $filter_by .= "Date, ";
             }
 

@@ -37,10 +37,10 @@ class BulkUserImport implements ToModel{
                 $gender_id = 2;
             }
 
-            //Get Role Id 
+            //Get Role Id
             $role_id = getRoleId($row[0]);
             if(!is_null($role_id)){
-                
+
                 //Data insert Here
                 $role = Role::where(['id'=>$role_id])->first();
 
@@ -51,8 +51,8 @@ class BulkUserImport implements ToModel{
                 }else{
                     $division_id = null;
                 }
-    
-    
+
+
                 $distict = District::where('name','like','%'.$row[6].'%')
                 ->first();
                 if(!is_null($distict)){
@@ -60,8 +60,8 @@ class BulkUserImport implements ToModel{
                 }else{
                     $distict_id = null;
                 }
-    
-    
+
+
                 $upazila = Upazila::where('name','like','%'.$row[7].'%')
                 ->first();
                 if(!is_null($upazila)){
@@ -119,14 +119,19 @@ class BulkUserImport implements ToModel{
                      $obj->gender = is_null($row[18])? "male":strtolower($row[18]);
                      $obj->gender_id = is_null($gender_id)? 1:$gender_id;
                      $obj->institute_name = $row[19];
-     
-                     $mfs = array(
-                         'bkash'=>'0'.$row[12],
-                         'nagad'=>'0'.$row[13],
-                         'rocket'=>'0'.$row[14],
-                         'sure_cash'=>null,
-                     );
-     
+                     $obj->signup_media = '2';
+
+                    $bkash = $row[12] != "" ? '0'.$row[12]:null;
+                    $nagad = $row[13] != "" ? '0'.$row[13]:null;
+                    $rocket = $row[14] != "" ? '0'.$row[14]:null;
+
+                    $mfs = array(
+                        'bkash'=>$bkash,
+                        'nagad'=>$nagad,
+                        'rocket'=>$rocket,
+                        'sure_cash'=>null,
+                    );
+
                      $obj->self_mfs = json_encode($mfs);
                      $obj->self_bank_asia_account = $row[15];
 
@@ -142,7 +147,7 @@ class BulkUserImport implements ToModel{
                      $obj->flag = $role->flag;
                      $obj->is_active = 1;
                      $obj->save();
-     
+
 
                      //Create Data for Agent Panel
                      Stakeholder::create([
@@ -156,13 +161,13 @@ class BulkUserImport implements ToModel{
                         $gender_education_asset_role = GenderEducationAssetRole::where(['role_id'=>$role->id])
                             ->pluck('id')
                             ->toArray();
-                
+
                         $component_ids = GenderEducationAssetRoleComponet::whereIn('gender_education_asset_role_id',$gender_education_asset_role)
                             ->pluck('component_id')
                             ->toArray();
-                
+
                         $component_ids_unique = array_unique($component_ids);
-                
+
                         $data = [];
                         foreach ($component_ids_unique as $com_id){
                             $data[] = [
@@ -181,17 +186,17 @@ class BulkUserImport implements ToModel{
                             ->whereIn('component_id', $component_ids)
                             ->get();
 
-            
+
                         $category_insert_data = [];
                         foreach ($categories as $category){
                             $is_approve = 0;
                             $category_id = $category->categoryApi->id;
                             //return $category_id;
-            
+
                             if($category->categoryApi->category_flag == "1"){
                                 $is_approve = 1;
                             }
-            
+
                             $category_insert_data[] = [
                                 'user_id'=>$obj->id,
                                 'category_id'=>$category_id,
@@ -200,14 +205,14 @@ class BulkUserImport implements ToModel{
                                 'created_at'=>now(),
                                 'updated_at'=>now()
                             ];
-            
+
                         }
 
                         //UserSelectedCategoryOrService
-            
+
                         UserSelectedCategoryOrService::insert($category_insert_data); //insert User Selected Category
-            
-                    
+
+
                         User::where(['id' => $obj->id])->update([
                             'user_status' => 1,
                             'is_assign_hub' => 1,
@@ -224,7 +229,7 @@ class BulkUserImport implements ToModel{
 
 
                     //Assign Hub
-                    
+
                     $hub = Hub::where(['is_active'=>1,'division_id'=>$division_id,'district_id'=>$distict_id,'upazila_id'=>$upazila_id])->first();
                     if(is_null($hub)){
                         $hubUser = new HubWmm();

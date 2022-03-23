@@ -114,6 +114,21 @@
         </div>
 
 
+        <div class="col-md-3" style="margin-top: 30px">
+            <label class="filter-label">Activation Status</label>
+            @php $statuses = array("Activated","Deactivated") @endphp
+            <select class="form-control js-example-basic-multiple full-width" name="login_status">
+
+                <option value="" selected>Choose</option>
+                @foreach($statuses as $k => $stts)
+                    @if($login_status == $stts)
+                        <option value="{{ $stts }}" selected>{{ $stts }}</option>
+                    @else
+                        <option value="{{ $stts }}">{{ $stts }}</option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
 
 
 
@@ -138,6 +153,13 @@
                     <a class="nav-link @if($first_active_tab->id == $sel_roles->id) active @endif" href="{{ url($module.'/stakeholders/?role='.$sel_roles->role_id) }}" style="font-weight: bolder;color:#495057;font-size:14px">{{ $sel_roles->role->name }}</a>
                   </li>
                 @endforeach
+
+                <li class="nav-item">
+
+                    <a class="nav-link " href="{{ route('agent.incomplete-signup', $module)}}" style="font-weight: bolder;color:#495057;font-size:14px">Incomplete Signup</a>
+
+                </li>
+
             </ul>
 
             <div class="card" style="border-radius: 0px 5px 5px 5px;border-top:none">
@@ -200,7 +222,7 @@
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-lg-end">
                                       @auth_access('agent-mem-cons-stkholder-all-export')
-                                        <li><a href="{{ url($module.'/stakeholders-all-export?role='.$first_active_tab->role_id.'&search='.$search.'&start_date='.$start_date.'&end_date='.$end_date.'&division_id='.$division_id.'&district_id='.$district_id.'&upazila_id='.$upazila_id.'&status='.$status.'&reference_id='.$reference_id) }}" class="dropdown-item"><i class="far fa-file-excel"></i> All Export</a></li>
+                                        <li><a href="{{ url($module.'/stakeholders-all-export?role='.$first_active_tab->role_id.'&search='.$search.'&start_date='.$start_date.'&end_date='.$end_date.'&division_id='.$division_id.'&district_id='.$district_id.'&upazila_id='.$upazila_id.'&status='.$status.'&reference_id='.$reference_id.'&login_status='.$login_status) }}" class="dropdown-item"><i class="far fa-file-excel"></i> All Export</a></li>
                                       @end_auth_access
 
                                       <li><a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#selectableModal" class="dropdown-item"><i class="fas fa-columns"></i> Show/Hide Column</a></li>
@@ -235,7 +257,7 @@
                                     <th class="col-serial table-header-index">
                                         <input type="checkbox" onchange="selects(this)"></th>
                                     <th class="table-header-index">Date</th>
-                                    <th class="table-header-index">Role</th>
+                                    <th class="table-header-index">Status</th>
                                     <th class="table-header-index">Name</th>
                                     <th class="table-header-index">Phone</th>
                                     <th class="table-header-index width-150">Ongoing Project</th>
@@ -262,6 +284,14 @@
                                                 <i class="fas fa-sort-down"></i>
                                             </button>
                                             <ul class="dropdown-menu table-dropdown">
+                                                @auth_access('agent-mem-cons-stkholder-activation')
+                                                    @if($user->is_active == 1)
+                                                        <li><a href="{{ url($module.'/stakeholders-status/'.$user->is_active.'/'.$user->id) }}" class="dropdown-item" style="color:red"><i class="far fa-times-circle"></i> Deactivated</a></li>
+                                                    @else
+                                                        <li><a href="{{ url($module.'/stakeholders-status/'.$user->is_active.'/'.$user->id) }}" class="dropdown-item" style="color:green"><i class="far fa-check-circle"></i> Activated</a></li>
+                                                    @endif
+                                                @end_auth_access
+
                                               @auth_access('agent-mem-cons-stkholder-details')
                                               <li><a href="{{ url($module.'/stakeholders/'.$user->id) }}" class="dropdown-item"><i class="fas fa-eye"></i> Details</a></li>
                                               @end_auth_access
@@ -283,10 +313,10 @@
                                     <td class="col-serial table-body-index"><input type="checkbox" value="{{$user->id}}" name="ids[]" class="select-checkbox"></td>
                                     <td class="text-color table-body-index">{{ date('d-m-Y h:i A',strtotime($user->created_at)) }}</td>
                                     <td class="text-color table-body-index">
-                                        @if (!is_null($user->spatieRole))
-                                        <i class="fas fa-user-tag"></i> {{ $user->spatieRole->name }}
+                                        @if($user->is_active == 1)
+                                            <span style="color:green"><i class="far fa-check-circle"></i> Activated</span>
                                         @else
-                                             N/A
+                                            <span style="color:red"><i class="far fa-times-circle"></i> Deactivated</span>
                                         @endif
                                     </td>
                                     <td class="text-color table-body-index">{{ $user->name }}</td>
@@ -384,7 +414,7 @@
 
 
                 <div class="container-fluid">
-                    {{ $stakeholders->appends(['role'=>$first_active_tab->role_id,'search'=>$search,'start_date'=>$start_date,'end_date'=>$end_date,'division_id'=>$division_id,'district_id'=>$district_id,'upazila_id'=>$upazila_id,'status'=>$status,'reference_id'=>$reference_id])->links() }}
+                    {{ $stakeholders->appends(['role'=>$first_active_tab->role_id,'search'=>$search,'start_date'=>$start_date,'end_date'=>$end_date,'division_id'=>$division_id,'district_id'=>$district_id,'upazila_id'=>$upazila_id,'status'=>$status,'reference_id'=>$reference_id,'login_status'=>$login_status])->links() }}
                 </div>
 
             </div>
@@ -407,7 +437,7 @@
 
         let selectable_field = [
             {index:3,name:"Date"},
-            {index:4,name:"Role"},
+            {index:4,name:"Status"},
             {index:5,name:"Name"},
             {index:6,name:"Phone"},
             {index:7,name:"Ongoing_project"},

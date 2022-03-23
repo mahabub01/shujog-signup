@@ -81,7 +81,8 @@ class RejectStakeholderController extends Controller
             'filter_district'=>null,
             'filter_upazila'=>null,
             'reference_id'=>null,
-            'references'=>$references
+            'references'=>$references,
+            'login_status'=> null
         ]);
 
     }
@@ -128,7 +129,7 @@ class RejectStakeholderController extends Controller
             }
 
             if($request->start_date != "" && $request->end_date != ""){
-                $stakeholders_query->whereBetween('created_at',[$request->start_date.'00.00.00',$request->end_date.'23.59.59']);
+                $stakeholders_query->whereBetween('created_at',[$request->start_date.' 00.00.00',$request->end_date.' 23.59.59']);
                 $filter_by .= "Date, ";
             }
 
@@ -154,6 +155,12 @@ class RejectStakeholderController extends Controller
             if($request->reference_id != ""){
                 $stakeholders_query->where(['signup_reference_id'=>$request->reference_id]);
                 $filter_by .= "Reference, ";
+            }
+
+            if($request->login_status != ""){
+                $loging_status = $request->login_status == "Activated" ? 1:0;
+                $stakeholders_query->where(['is_active'=>$loging_status]);
+                $filter_by .= "Activation Status, ";
             }
 
             $data =  $stakeholders_query->orderBy('id','asc')->paginate(100);
@@ -174,7 +181,7 @@ class RejectStakeholderController extends Controller
                     $query->whereIn('consultant_status',[4]);
                 });
             }
-            
+
             if($request->search != ""){
                 $stakeholders_query->where('name','like','%'.$request->search.'%')
                     ->orWhere(['mobile'=>$request->search]);
@@ -182,7 +189,7 @@ class RejectStakeholderController extends Controller
             }
 
             if($request->start_date != "" && $request->end_date != ""){
-                $stakeholders_query->whereBetween('created_at',[$request->start_date.'00.00.00',$request->end_date.'23.59.59']);
+                $stakeholders_query->whereBetween('created_at',[$request->start_date.' 00.00.00',$request->end_date.' 23.59.59']);
                 $filter_by .= "Date, ";
             }
 
@@ -211,6 +218,11 @@ class RejectStakeholderController extends Controller
             }
 
 
+            if($request->login_status != ""){
+                $loging_status = $request->login_status == "Activated" ? 1:0;
+                $stakeholders_query->where(['is_active'=>$loging_status]);
+                $filter_by .= "Activation Status, ";
+            }
 
             $data =  $stakeholders_query->orderBy('id','asc')->paginate(100);
 
@@ -237,7 +249,8 @@ class RejectStakeholderController extends Controller
             'filter_district'=>$filter_district,
             'filter_upazila'=>$filter_upazila,
             'reference_id'=>$request->reference_id,
-            'references'=>$references
+            'references'=>$references,
+            'login_status'=>$request->login_status
         ]);
     }
 

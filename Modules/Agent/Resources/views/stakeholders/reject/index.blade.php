@@ -96,6 +96,23 @@
                 </div>
 
 
+                <div class="col-md-3">
+                    <label class="filter-label">Activation Status</label>
+                    @php $statuses = array("Activated","Deactivated") @endphp
+                    <select class="form-control js-example-basic-multiple full-width" name="login_status">
+
+                        <option value="" selected>Choose</option>
+                        @foreach($statuses as $k => $stts)
+                            @if($login_status == $stts)
+                                <option value="{{ $stts }}" selected>{{ $stts }}</option>
+                            @else
+                                <option value="{{ $stts }}">{{ $stts }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+
+
             </div>
 
         @endslot
@@ -172,7 +189,7 @@
 
                                         <ul class="dropdown-menu dropdown-menu-lg-end">
                                             @auth_access('agent-mem-cons-stkholder-reject-all-export')
-                                            <li><a href="{{ url($module.'/consult-reject-all-export?role='.$first_active_tab->role_id.'&search='.$search.'&start_date='.$start_date.'&end_date='.$end_date.'&division_id='.$division_id.'&district_id='.$district_id.'&upazila_id='.$upazila_id.'&status='.$status,'&reference_id='.$reference_id) }}" class="dropdown-item"><i class="far fa-file-excel"></i> All Export</a></li>
+                                            <li><a href="{{ url($module.'/consult-reject-all-export?role='.$first_active_tab->role_id.'&search='.$search.'&start_date='.$start_date.'&end_date='.$end_date.'&division_id='.$division_id.'&district_id='.$district_id.'&upazila_id='.$upazila_id.'&status='.$status,'&reference_id='.$reference_id.'&login_status='.$login_status) }}" class="dropdown-item"><i class="far fa-file-excel"></i> All Export</a></li>
                                             @end_auth_access
                                         </ul>
 
@@ -204,7 +221,7 @@
                                         <th class="col-serial"></th>
                                         <th class="col-serial"><input type="checkbox" onchange="selects(this)"></th>
                                         <th scope="col">Date</th>
-                                        <th scope="col">Role</th>
+                                        <th scope="col">Status</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Phone</th>
                                         <th class="width-150">Ongoing Project</th>
@@ -232,6 +249,15 @@
                                                         <i class="fas fa-sort-down"></i>
                                                     </button>
                                                     <ul class="dropdown-menu table-dropdown">
+
+                                                        @auth_access('agent-mem-cons-stkholder-activation')
+                                                        @if($user->is_active == 1)
+                                                            <li><a href="{{ url($module.'/stakeholders-status/'.$user->is_active.'/'.$user->id) }}" class="dropdown-item" style="color:red"><i class="far fa-times-circle"></i> Deactivated</a></li>
+                                                        @else
+                                                            <li><a href="{{ url($module.'/stakeholders-status/'.$user->is_active.'/'.$user->id) }}" class="dropdown-item" style="color:green"><i class="far fa-check-circle"></i> Activated</a></li>
+                                                        @endif
+                                                        @end_auth_access
+
                                                         @auth_access('agent-mem-cons-stkholder-reject-details')
                                                         <li><a href="{{ url($module.'/consult-reject-stakeholder/'.$user->id) }}" class="dropdown-item"><i class="fas fa-eye"></i> Details</a></li>
                                                         @end_auth_access
@@ -248,10 +274,10 @@
 
                                             <td class="text-color">{{ date('d-m-Y h:i A',strtotime($user->created_at)) }}</td>
                                             <td class="text-color">
-                                                @if (!is_null($user->spatieRole))
-                                                    <i class="fas fa-user-tag"></i> {{ $user->spatieRole->name }}
+                                                @if($user->is_active == 1)
+                                                    <span style="color:green"><i class="far fa-check-circle"></i> Activated</span>
                                                 @else
-                                                    N/A
+                                                    <span style="color:red"><i class="far fa-times-circle"></i> Deactivated</span>
                                                 @endif
                                             </td>
                                             <td class="text-color">{{ $user->name }}</td>
@@ -311,7 +337,7 @@
 
 
                     <div class="container-fluid">
-                        {{ $stakeholders->appends(['role'=>$first_active_tab->role_id,'search'=>$search,'start_date'=>$start_date,'end_date'=>$end_date,'division_id'=>$division_id,'district_id'=>$district_id,'upazila_id'=>$upazila_id,'status'=>$status,'reference_id'=>$reference_id])->links() }}
+                        {{ $stakeholders->appends(['role'=>$first_active_tab->role_id,'search'=>$search,'start_date'=>$start_date,'end_date'=>$end_date,'division_id'=>$division_id,'district_id'=>$district_id,'upazila_id'=>$upazila_id,'status'=>$status,'reference_id'=>$reference_id,'login_status'=>$login_status])->links() }}
                     </div>
 
                 </div>

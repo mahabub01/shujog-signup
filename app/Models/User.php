@@ -48,7 +48,7 @@ class User extends Authenticatable
         'self_nid_mothers_name', 'self_nid_present_address', 'self_permenant_address', 'self_picture', 'self_mfs', 'self_bank_asia_account', 'guardian_nid_number', 'guardian_name', 'guardian_phone', 'guardian_gender', 'guardian_nid_present_address',
         'guardian_nid_permenant_address', 'guardian_picture', 'guardian_relation', 'guardian_mfs', 'is_complete_genarel_signup', 'education_requirement_id', 'investment_requirement_id', 'channel', 'category_type_ids', 'category_ids', 'suggest_course_ids',
         'pin', 'designation', 'registration_type', 'is_assign_hub', 'assign_hub_type', 'is_apologized', 'is_interested', 'otp', 'otp_status', 'user_status', 'asset_availabilitiey_id', 'is_complete_earn_signup', 'category_with_channel','signup_reference_id','referral_number',
-        'device_info','longitude','latitude','is_system_admin','gender_id','institute_name','self_nid_card_front_image','self_nid_card_back_image','union'
+        'device_info','longitude','latitude','is_system_admin','gender_id','institute_name','self_nid_card_front_image','self_nid_card_back_image','union','signup_media','is_complete_quick_signup'
     ];
 
     /**
