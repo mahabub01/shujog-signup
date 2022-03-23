@@ -215,6 +215,7 @@
                                   <li><a href="" class="dropdown-item"><i class="fas fa-eye"></i> Details</a></li>
                                 </ul> --}}
 
+                                <a href="{{ route('agent.log.consultant', $module) }}"><button type="button" class="icon_btn">log</button></a>
 
                                 <div class="btn-group">
                                     <button type="button" class="icon_btn" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">

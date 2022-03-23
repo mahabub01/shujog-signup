@@ -13,6 +13,9 @@ class StakeholderEvaluation extends Model{
         'user_id','agent_id','mark','status'
     ];
 
+
+
+
     protected $hidden = [
         'created_at','updated_at'
     ];

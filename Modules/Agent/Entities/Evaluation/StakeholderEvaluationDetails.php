@@ -12,9 +12,11 @@ class StakeholderEvaluationDetails extends Model{
     protected $fillable = [
         'agent_stkholder_evalu_id','agent_ev_qus_id','answer','status','mark','user_id'
     ];
+    
 
     protected $hidden = [
         'created_at','updated_at'
     ];
+
 
 }

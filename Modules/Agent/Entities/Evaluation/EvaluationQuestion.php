@@ -12,9 +12,12 @@ class EvaluationQuestion extends Model{
         'question','ans_a','ans_b','ans_c','ans_d','ans_e','question_type','mark','correct_answer'
     ];
 
+    
+
     protected $hidden = [
         'created_at','updated_at'
     ];
+
 
 
 }

@@ -52,6 +52,12 @@ Route::post('load-district-by-division',[\Modules\Agent\Http\Controllers\UserCon
  Route::put('{module}/stakeholder/incomplete-signup/update/{id}',[\Modules\Agent\Http\Controllers\Stakeholder\UnCompleteSignupController::class,'update'])->name('agent.incomplete-signup.update');
 
 
+ Route::get('{module}/consultant-log',[\Modules\Agent\Http\Controllers\LogController::class,'index'])->name('agent.log.consultant');
+ Route::get('agent/deployer-log',[\Modules\Agent\Http\Controllers\Deployer\LogController::class,'index'])->name('agent.log.deployer');
+ Route::get('agent/trainer-log',[\Modules\Agent\Http\Controllers\Trainer\LogController::class,'index'])->name('agent.log.trainer');
+ Route::get('agent/pmanager-log',[\Modules\Agent\Http\Controllers\Pmamager\LogController::class,'index'])->name('agent.log.pmanager');
+ Route::get('agent/nmanager-log',[\Modules\Agent\Http\Controllers\Nmanager\LogController::class,'index'])->name('agent.log.nmanager');
+
 
 
 //prevent-back-history middleware('core_permission')->
