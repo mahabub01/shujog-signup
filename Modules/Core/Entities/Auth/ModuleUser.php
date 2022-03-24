@@ -7,15 +7,22 @@ namespace Modules\Core\Entities\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Models\User\RetailUser;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+
 class ModuleUser extends Model
 {
-
+    use LogsActivity;
     protected $table ="module_user";
 
     /**
      * @var string[]
      */
     protected $fillable = [
+        'user_id','module_id'
+    ];
+
+    protected static $logAttributes = [
         'user_id','module_id'
     ];
 
@@ -26,6 +33,14 @@ class ModuleUser extends Model
         'created_at','updated_at'
     ];
 
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logAll()
+        ->useLogName('ModuleUser')
+        ->logOnlyDirty();
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\hasMany

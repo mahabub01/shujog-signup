@@ -5,9 +5,12 @@ namespace Modules\Core\Entities\Auth;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Permission extends Model
 {
+    use LogsActivity;
     protected $table ="permissions";
 
     /**
@@ -17,7 +20,18 @@ class Permission extends Model
         'name','guard_name','module_id','sub_module_id','module_id','action','comments','professional_name','is_view_with_component','route_url'
     ];
 
+    protected static $logAttributes = [
+        'name','guard_name','module_id','sub_module_id','module_id','action','comments','professional_name','is_view_with_component','route_url'
+    ];
 
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logAll()
+        ->useLogName('Permission')
+        ->logOnlyDirty();
+    }
 
     /**
      * @var string[]

@@ -188,6 +188,7 @@
                             </ul>
 
                             <div class="d-flex" style="margin-bottom: 20px;">
+                                <a href="{{ route('agent.log.deployer', $module) }}"><button type="button" class="icon_btn">log</button></a>
 
                                 <div class="btn-group">
                                     <button type="button" class="icon_btn" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">

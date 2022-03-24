@@ -2,71 +2,99 @@
 
 namespace Modules\Agent\Http\Controllers;
 
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 
 class LogController
 {
-    public function index($module){
+    public function index($module)
+    {
 
+        $id = Auth::id();
+        $flag = Auth::user()->flag;
 
-        $logs = Activity::all();
-        $first_active_tab = null;
-        // if(isset($request->role)){
-        //     $first_active_tab = AgentRoleUser::with('role')->where(['user_id'=>auth()->user()->id,'role_id'=>$request->role])->first();
-
-        //     $stakeholders = User::with(['stakeholder','stakeholderEvaluation','stakeholderCommnet','signupReference','stakeholderCommnetForTrainer','stakeholderCommnetForDeployer','stakeholderCommnetForNmanager','assignProject'=>function($q){
-        //         $q->select('stakeholder_id','project_id');
-        //     },'assignProject.project'])->where(['spatie_role_id'=>$request->role])
-        //     ->whereHas('stakeholder',function($query){
-        //         $query->whereIn('consultant_status',[1,2,3]);
-        //     })
-        //     ->orderBy(Stakeholder::select('consultant_status')->whereColumn('agent_stakeholders.user_id','sujog_users.id'))
-        //     ->paginate(100);
-
-
-        // }else{
-
-        //     $first_active_tab = $selectRoles->first();
-        //     $stakeholders = User::with(['stakeholder','stakeholderEvaluation','stakeholderCommnet','signupReference','stakeholderCommnetForTrainer','stakeholderCommnetForDeployer','stakeholderCommnetForNmanager','assignProject'=>function($q){
-        //         $q->select('stakeholder_id','project_id');
-        //     },'assignProject.project'])
-        //     ->where(['spatie_role_id'=>$first_active_tab->role_id])
-        //     ->whereHas('stakeholder',function($query){
-        //         $query->whereIn('consultant_status',[1,2,3]);
-        //     })
-        //     ->orderBy(Stakeholder::select('consultant_status')->whereColumn('agent_stakeholders.user_id','sujog_users.id'))
-        //     ->paginate(100);
-
-
-        // }
-
+        if ($flag == 19) {
+            $user_id = User::whereIn('flag', [19, 24])->pluck('id')->toArray();
+            $logs = Activity::whereIn('causer_id', $user_id)->whereDate('created_at', Carbon::today())->latest()->paginate(20);
+        } else {
+            $logs = Activity::where('causer_id', $id)->latest()->paginate(20);
+        }
 
         $filter_by = "None";
-        // $last_updated = last_modify_human_date(AgentRoleUser::latest()->first());
+        $last_updated = last_modify_human_date(Activity::latest()->first());
 
-        // $filter_district = null;
-        // $filter_upazila = null;
 
-        // $references = SignupReference::where(['is_active'=>1])->get(['id','title']);
-
-        return view("agent::stakeholders.log.log",[
-            // 'stakeholders'=>$stakeholders,
-            // 'selectRoles'=>$selectRoles,
-            // 'last_updated'=>$last_updated,
-            // 'status'=>null,
-            // 'references'=>$references,
-            // 'reference_id'=>null,
-            // 'login_status'=> null
+        return view("agent::stakeholders.log.log", [
+            'last_updated' => $last_updated,
             'logs' => $logs,
-            'module'=>$module,
-            'filter_by'=>$filter_by,
-            'search'=>null,
-            'start_date'=>null,
-            'end_date'=>null,
-            'first_active_tab'=>$first_active_tab,
+            'module' => $module,
+            'filter_by' => $filter_by,
+            'search' => null,
+            'start_date' => null,
+            'end_date' => null,
         ]);
-
-        // print_r($data);
     }
 
+    public function filter(Request $request, $module)
+    {
+
+        $id = Auth::id();
+        $flag = Auth::user()->flag;
+        $search = $request->search;
+        $filter_by = "";
+
+
+        if ($flag == 19) {
+
+            // search by name
+            if($request->search != ""){
+                $user_id = User::whereIn('flag', [19, 24])->where('name','like','%'.$request->search.'%')->pluck('id')->toArray();
+                $logs = Activity::whereIn('causer_id', $user_id);
+                $filter_by .= "Name, ";
+            }else{
+                $user_id = User::whereIn('flag', [19, 24])->pluck('id')->toArray();
+                $logs = Activity::whereIn('causer_id', $user_id);
+            }
+
+            // search by date
+            if($request->start_date != "" && $request->end_date != ""){
+                $logs->whereBetween('created_at',[$request->start_date.' 00.00.00',$request->end_date.' 23.59.59']);
+                $filter_by .= "Date, ";
+            }else{
+                $logs->whereDate('created_at', Carbon::today());
+            }
+
+        } else {
+
+            // member condition
+            $logs = Activity::where('causer_id', $id);
+
+            // search by date
+            if($request->start_date != "" && $request->end_date != ""){
+                $logs->whereBetween('created_at',[$request->start_date.' 00.00.00',$request->end_date.' 23.59.59']);
+                $filter_by .= "Date, ";
+            }else{
+                $logs->whereDate('created_at', Carbon::today());
+            }
+
+        }
+
+        $last_updated = last_modify_human_date(Activity::latest()->first());
+
+
+        $data = $logs->latest()->paginate(10);
+
+        return view("agent::stakeholders.log.log", [
+            'search' => $request->search,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'last_updated' => $last_updated,
+            'logs' => $data,
+            'module' => $module,
+            'filter_by' => $filter_by,
+        ]);
+    }
 }

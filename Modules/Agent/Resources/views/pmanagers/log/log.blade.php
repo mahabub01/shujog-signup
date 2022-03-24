@@ -10,7 +10,7 @@
     <!-- start filter modal  -->
     @component('core::inc.filter')
         @slot('filter_route')
-            {{ Form::open(['route' => ['agent.log.consultant.filter', $module], 'method' => 'GET']) }}
+            {{ Form::open(['route' => ['agent.log.pmanager.filter', $module], 'method' => 'GET']) }}
         @endslot
 
         @slot('filter_title')
@@ -20,13 +20,14 @@
         @slot('filter_body')
             <div class="row">
 
-                @if (Auth::user()->flag == 19)
+                @if (Auth::user()->flag == 23)
                     <div class="col-md-3">
                         <label class="filter-label">Search</label>
                         <input type="text" name="search" class="form-control" placeholder="Search Name"
                             value="{{ $search }}" />
                     </div>
                 @endif
+
                 <div class="col-md-3">
                     <label class="filter-label">Start Date</label>
                     <input type="date" name="start_date" class="form-control" value="{{ $start_date }}" />
@@ -96,10 +97,10 @@
                                 <div class="d-flex" style="margin-bottom: 20px;">
                                     <a href="{{ route('agent.log.consultant', $module) }}"><button type="button"
                                             class="icon_btn"><i class="fas fa-redo"></i></button></a>
-                                    @auth_access('agent-mem-cons-stkholder-filter')
+                                    {{-- @auth_access('agent-mem-cons-stkholder-filter') --}}
                                     <a href="#"><button type="button" class="icon_btn" data-bs-toggle="modal"
                                             data-bs-target="#filterModal"><i class="fas fa-filter"></i></button></a>
-                                    @end_auth_access
+                                    {{-- @end_auth_access --}}
                                 </div>
 
                             </div>
@@ -132,7 +133,7 @@
                                                 <tr class="table-row-index">
 
 
-                                                    <td class="col-serial table-body-index">{{ $k + 1 }}</td>
+                                                    <td class="col-serial table-body-index">{{ $k + 1 }} {{ $log->log_name }}</td>
                                                     <td class="text-color table-body-index">
                                                         {{ date('d-m-Y h:i A', strtotime($log->created_at)) }}</td>
 
@@ -159,25 +160,14 @@
                                                                         {{ userLogNew($col, $v, $log->event) }}
                                                                     @endif
 
-                                                                    @if ($log->log_name == 'Role')
-                                                                        {{ roleLog($col, $v, $log->event) }}
+                                                                    @if ($log->log_name == 'ProMngAssignProject')
+                                                                        {{ proMngAssignProjectLog($col, $v, $log->event) }}
+                                                                    @endif
+                                                                    @if ($log->log_name == 'Project')
+                                                                        {{ projectLog($col, $v, $log->event) }}
                                                                     @endif
 
-                                                                    @if ($log->log_name == 'Comment')
-                                                                        {{ commentLog($col, $v, $log->event) }}
-                                                                    @endif
 
-                                                                    @if ($log->log_name == 'EvalutionDetails')
-                                                                        {{ evalutionDetailsLog($col, $v, $log->event) }}
-                                                                    @endif
-
-                                                                    @if ($log->log_name == 'Union')
-                                                                        {{ unionLog($col, $v, $log->event) }}
-                                                                    @endif
-
-                                                                    @if ($log->log_name == 'Village')
-                                                                        {{ villageLog($col, $v, $log->event) }}
-                                                                    @endif
                                                                 @endforeach
                                                             </ul>
                                                         @else
@@ -221,9 +211,6 @@
 
                 </div>
             </div>
-
-
-
 
         </div>
     </div>

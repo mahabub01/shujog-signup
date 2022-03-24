@@ -4,6 +4,8 @@
 //Return Agent User Flag
 
 use App\Models\User;
+use Modules\Agent\Entities\AgentProject;
+use Modules\Agent\Entities\Evaluation\EvaluationQuestion;
 use Modules\Core\Entities\Common\AssetAvailability;
 use Modules\Core\Entities\Common\EducationRequirement;
 use Modules\Core\Entities\Common\InvestmentRequirement;
@@ -399,6 +401,9 @@ function issetUser($id)
     if (User::find($id)) {
         return true;
     }
+    else{
+        return 'Unknown';
+    }
 }
 
 function getRoleNameLog($id)
@@ -406,6 +411,9 @@ function getRoleNameLog($id)
     $q = Role::find($id);
     if ($q) {
         return $q->name;
+    }
+    else{
+        return 'Unknown';
     }
 }
 
@@ -415,6 +423,9 @@ function getEducationNameLog($id)
     if ($q) {
         return $q->title;
     }
+    else{
+        return 'Unknown';
+    }
 
 }
 function getInvestmentName($id)
@@ -423,15 +434,23 @@ function getInvestmentName($id)
     if ($q) {
         return $q->title;
     }
+    else{
+        return 'Unknown';
+    }
 }
+
 function getAssetAvailability($id)
 {
     $q = AssetAvailability::find($id);
     if ($q) {
         return $q->title;
+    }else{
+        return 'Unknown';
     }
 }
 
+
+// valu is null retrun N/A
 function isValue($v){
     if(!is_null($v)){
         return $v;
@@ -443,6 +462,18 @@ function isValue($v){
 
 
 // =============   Location   =============
+
+// event style
+function eventStyle($e){
+    if($e == 'deleted'){
+        echo "<span class='text-danger fw-blod text-capitalize'>".$e."</span>";
+    }elseif($e == 'updated'){
+        echo "<span class='text-primary fw-blod text-capitalize'>".$e."</span>";
+    }else{
+        echo "<span class='text-success fw-blod text-capitalize'>".$e."</span>";
+    }
+}
+
 // Division
 function getDivisionName($v){
     $q = Division::find($v);
@@ -479,9 +510,30 @@ function getVillageName($v){
     }
 }
 
-// Village
+// Question Name
+function getQuestion($v){
+    $q = EvaluationQuestion::find($v);
+    if ($q) {
+        return $q->question;
+    }
+    else{
+        return('Unknown User');
+    }
+}
+// user Name
 function userName($v){
     $q = User::find($v);
+    if ($q) {
+        return $q->name;
+    }
+    else{
+        return('Unknown User');
+    }
+}
+
+// project Name
+function getProjectName($v){
+    $q = AgentProject::find($v);
     if ($q) {
         return $q->name;
     }
@@ -495,7 +547,7 @@ function userLogNew($col, $v, $e)
 {
     if($e == 'created'){
         if ($col == "name" || $col == "email" || $col == "mobile"){
-            echo '<li><span class="fw-bold">' .ucwords(str_replace('_',' ',$col)). ':</span>'. $v . '</li>';
+            echo '<li><span class="fw-bold">' .ucwords(str_replace('_',' ',$col)). ' : </span>'. $v . '</li>';
         }
     }else{
         if ($col == "password"){
@@ -549,16 +601,98 @@ function roleLog($col, $v, $e)
         if ($col == "role_id"){
             echo '<li><span class="fw-bold"> Role  : </span>'. getRoleNameLog($v) .'</li>';
         }
-
         elseif ($col == "user_id"){
             echo '<li><span class="fw-bold"> Name  : </span>'. userName($v) .'</li>';
         }
         elseif ($col == "self_mfs"){
-
             echo '<li><span class="fw-bold"> Mobile Banking  : </span>'. $v .'</li>';
         }
-        elseif($col == "updated_at" || $col == "created_at" || $col == "flag"){}
 
+    }
+}
+
+
+function proMngAssignProjectLog($col, $v, $e)
+{
+    if($e == 'created'){
+
+        if ($col == "project_id"){
+            echo '<li><span class="fw-bold"> Project Name  : </span>'. getProjectName($v) .'</li>';
+        }
+        elseif ($col == "user_id"){
+            echo '<li><span class="fw-bold"> User Name  : </span>'. userName($v) .'</li>';
+        }
+    }
+}
+
+
+function projectLog($col, $v, $e)
+{
+    if($e == 'created'){
+
+        if ($col == "name"){
+            echo '<li><span class="fw-bold"> Project Name  : </span>'. $v .'</li>';
+        }
+        elseif ($col == "user_id" || $col == "sur_name" || $col == "start_date" || $col == "end_date" || $col == "extention_time" || $col == "description" || $col == "customer_served" || $col == "sales_target" ){
+            echo '<li><span class="fw-bold">' .ucwords(str_replace('_',' ',$col)). ' : </span>'. isValue($v) . '</li>';
+        }
+    }
+}
+
+
+function evalutionDetailsLog($col, $v, $e)
+{
+    if($e == 'created'){
+
+        if ($col == "mark"){
+            echo '<li><span class="fw-bold"> Mark  : </span>'. ($v) .'</li>';
+        }
+        elseif ($col == "agent_ev_qus_id"){
+            echo '<li><span class="fw-bold"> Question  : </span>'. getQuestion($v) .'</li>';
+        }
+        elseif ($col == "answer"){
+            echo '<li><span class="fw-bold"> Answer  : </span>'. $v .'</li>';
+        }
+        elseif ($col == "user_id"){
+            echo '<li><span class="fw-bold"> Name  : </span>'. userName($v) .'</li>';
+        }
+
+    }
+}
+function commentLog($col, $v, $e)
+{
+    if($e == 'created'){
+
+        if ($col == "comment"){
+            echo '<li><span class="fw-bold"> Comment  : </span>'. ($v) .'</li>';
+        }
+
+        elseif ($col == "user_id"){
+            echo '<li><span class="fw-bold"> Name  : </span>'. userName($v) .'</li>';
+        }
+        elseif ($col == "status"){
+
+            echo '<li><span class="fw-bold"> Status  : </span>'. getStatusFullForm($v) .'</li>';
+        }
+    }
+}
+
+
+function unionLog($col, $v, $e)
+{
+    if($e == 'created'){
+        if ($col == "name"){
+            echo '<li><span class="fw-bold"> Union : </span>'. ($v) .'</li>';
+        }
+    }
+}
+
+function villageLog($col, $v, $e)
+{
+    if($e == 'created'){
+        if ($col == "name"){
+            echo '<li><span class="fw-bold"> Village : </span>'. ($v) .'</li>';
+        }
     }
 }
 
@@ -566,11 +700,11 @@ function userLogOld($col, $v, $e)
 {
     if($e == 'deleted'){
         if ($col == "name" || $col == "email" || $col == "mobile"){
-            echo '<li><span class="fw-bold">' .ucwords(str_replace('_',' ',$col)). ':</span>'. isValue($v) . '</li>';
+            echo '<li><span class="fw-bold">' .ucwords(str_replace('_',' ',$col)). ' : </span>'. isValue($v) . '</li>';
         }
     }else{
         if ($col == "password"){
-            echo '<li><span class="fw-bold">'. ucwords(str_replace('_',' ',$col)). ':</span>  Old Password</li>';
+            echo '<li><span class="fw-bold">'. ucwords(str_replace('_',' ',$col)). ' : </span>  Old Password</li>';
         }
         elseif ($col == "spatie_role_id"){
             echo '<li><span class="fw-bold"> Education : </span>'. isValue(ucwords(getRoleNameLog($v))) .'</li>';

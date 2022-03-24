@@ -10,7 +10,7 @@
     <!-- start filter modal  -->
     @component('core::inc.filter')
         @slot('filter_route')
-            {{ Form::open(['route' => ['agent.log.consultant.filter', $module], 'method' => 'GET']) }}
+            {{ Form::open(['route' => ['agent.log.nmanager.filter', $module], 'method' => 'GET']) }}
         @endslot
 
         @slot('filter_title')
@@ -20,13 +20,14 @@
         @slot('filter_body')
             <div class="row">
 
-                @if (Auth::user()->flag == 19)
+                @if (Auth::user()->flag == 22)
                     <div class="col-md-3">
                         <label class="filter-label">Search</label>
                         <input type="text" name="search" class="form-control" placeholder="Search Name"
                             value="{{ $search }}" />
                     </div>
                 @endif
+
                 <div class="col-md-3">
                     <label class="filter-label">Start Date</label>
                     <input type="date" name="start_date" class="form-control" value="{{ $start_date }}" />
@@ -169,14 +170,6 @@
 
                                                                     @if ($log->log_name == 'EvalutionDetails')
                                                                         {{ evalutionDetailsLog($col, $v, $log->event) }}
-                                                                    @endif
-
-                                                                    @if ($log->log_name == 'Union')
-                                                                        {{ unionLog($col, $v, $log->event) }}
-                                                                    @endif
-
-                                                                    @if ($log->log_name == 'Village')
-                                                                        {{ villageLog($col, $v, $log->event) }}
                                                                     @endif
                                                                 @endforeach
                                                             </ul>

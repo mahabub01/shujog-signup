@@ -5,9 +5,12 @@ namespace Modules\Core\Entities\Auth;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Permission;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Submodule extends Model
 {
+    use LogsActivity;
 
     protected $table ="submodules";
 
@@ -15,6 +18,10 @@ class Submodule extends Model
      * @var string[]
      */
     protected $fillable = [
+        'title','action','action_type','icons','module_id','is_active','upload_icon','comments'
+    ];
+
+    protected static $logAttributes = [
         'title','action','action_type','icons','module_id','is_active','upload_icon','comments'
     ];
 
@@ -26,6 +33,13 @@ class Submodule extends Model
     ];
 
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logAll()
+        ->useLogName('Submoule')
+        ->logOnlyDirty();
+    }
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

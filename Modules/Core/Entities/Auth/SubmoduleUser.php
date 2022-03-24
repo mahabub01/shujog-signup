@@ -6,15 +6,22 @@ namespace Modules\Core\Entities\Auth;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Models\User\RetailUser;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class SubmoduleUser extends Model
 {
+    use LogsActivity;
     protected $table ="submodule_user";
 
     /**
      * @var string[]
      */
     protected $fillable = [
+        'user_id','submodule_id'
+    ];
+
+    protected static $logAttributes = [
         'user_id','submodule_id'
     ];
 
@@ -25,6 +32,13 @@ class SubmoduleUser extends Model
         'created_at','updated_at'
     ];
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logAll()
+        ->useLogName('SubmoduleUser')
+        ->logOnlyDirty();
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\hasMany
