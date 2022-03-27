@@ -628,15 +628,16 @@ function proMngAssignProjectLog($col, $v, $e)
 
 function projectLog($col, $v, $e)
 {
-    if($e == 'created'){
+    // if($e == 'created'){
 
         if ($col == "name"){
             echo '<li><span class="fw-bold"> Project Name  : </span>'. $v .'</li>';
         }
-        elseif ($col == "user_id" || $col == "sur_name" || $col == "start_date" || $col == "end_date" || $col == "extention_time" || $col == "description" || $col == "customer_served" || $col == "sales_target" ){
+        elseif ($col == "sur_name" || $col == "start_date" || $col == "end_date" || $col == "extention_time" || $col == "description" || $col == "customer_served" || $col == "sales_target" ){
             echo '<li><span class="fw-bold">' .ucwords(str_replace('_',' ',$col)). ' : </span>'. isValue($v) . '</li>';
         }
-    }
+
+    // }
 }
 
 
@@ -748,5 +749,15 @@ function userLogOld($col, $v, $e)
 
 }
 
+
+
+function testLog($col, $v, $e)
+{
+    if($e == 'created'){
+        // if ($col == "name"){
+            echo '<li><span class="fw-bold"> Village : </span>'. ($v) .'</li>';
+        // }
+    }
+}
 
 

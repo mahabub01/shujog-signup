@@ -1,5 +1,5 @@
 @extends('core::layouts.app')
-@section('title', 'Consultant Log')
+@section('title', 'Pmanager Log')
 @section('content')
 
     @include('core::inc.component')
@@ -95,7 +95,7 @@
                                 </ul>
 
                                 <div class="d-flex" style="margin-bottom: 20px;">
-                                    <a href="{{ route('agent.log.consultant', $module) }}"><button type="button"
+                                    <a href="{{ route('agent.log.pmanager', $module) }}"><button type="button"
                                             class="icon_btn"><i class="fas fa-redo"></i></button></a>
                                     {{-- @auth_access('agent-mem-cons-stkholder-filter') --}}
                                     <a href="#"><button type="button" class="icon_btn" data-bs-toggle="modal"
@@ -182,6 +182,11 @@
                                                                     @if ($log->log_name == 'Users')
                                                                         {{ userLogOld($col, $v, $log->event) }}
                                                                     @endif
+
+                                                                    @if ($log->log_name == 'Project')
+                                                                        {{ projectLog($col, $v, $log->event) }}
+                                                                    @endif
+
                                                                 @endforeach
                                                             </ul>
                                                         @else

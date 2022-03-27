@@ -1,5 +1,5 @@
 @extends('core::layouts.app')
-@section('title', 'Consultant Log')
+@section('title', 'Deployer Log')
 @section('content')
 
     @include('core::inc.component')
@@ -95,12 +95,12 @@
                                 </ul>
 
                                 <div class="d-flex" style="margin-bottom: 20px;">
-                                    <a href="{{ route('agent.log.consultant', $module) }}"><button type="button"
+                                    <a href="{{ route('agent.log.deployer', $module) }}"><button type="button"
                                             class="icon_btn"><i class="fas fa-redo"></i></button></a>
-                                    @auth_access('agent-mem-cons-stkholder-filter')
+                                    {{-- @auth_access('agent-mem-cons-stkholder-filter') --}}
                                     <a href="#"><button type="button" class="icon_btn" data-bs-toggle="modal"
                                             data-bs-target="#filterModal"><i class="fas fa-filter"></i></button></a>
-                                    @end_auth_access
+                                    {{-- @end_auth_access --}}
                                 </div>
 
                             </div>

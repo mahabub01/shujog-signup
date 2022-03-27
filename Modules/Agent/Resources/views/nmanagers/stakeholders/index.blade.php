@@ -180,6 +180,8 @@
                             <div class="d-flex" style="margin-bottom: 20px;">
 
                                 <div class="btn-group">
+                                    <a href="{{ route('agent.log.nmanager', $module) }}"><button type="button" class="icon_btn">log</button></a>
+
                                     <button type="button" class="icon_btn" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                                         <i class="fas fa-cog"></i>
                                     </button>
